@@ -8,14 +8,14 @@ public class Rankings {
 	private static AtomicInteger initialRanking;
 
 	static {
-		String[] aphorisms = { "Grateful Dead.",
+		String[] bands = { "Grateful Dead.",
 				"Phish.",
 				"Little Feat.",
 				"Billy Joel.",
 				"moe." };
 		bandNames = new CopyOnWriteArrayList<Ranking>();
 		initialRanking = new AtomicInteger();
-		for (String str : aphorisms)
+		for (String str : bands)
 			addInitial(str);
 	}
 
