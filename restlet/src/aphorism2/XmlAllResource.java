@@ -15,17 +15,17 @@ public class XmlAllResource extends ServerResource {
 
 	@Get
 	public Representation toXml() {
-		List<Adage> list = Adages.getList();
+		List<Ranking> list = Rankings.getList();
 		DomRepresentation dom = null;
 		try {
 			dom = new DomRepresentation(MediaType.TEXT_XML);
 			dom.setIndenting(true);
 			Document doc = dom.getDocument();
 
-			Element root = doc.createElement("adages");
-			for (Adage adage : list) {
-				Element next = doc.createElement("adage");
-				next.appendChild(doc.createTextNode(adage.toString()));
+			Element root = doc.createElement("bands");
+			for (Ranking band : list) {
+				Element next = doc.createElement("band");
+				next.appendChild(doc.createTextNode(band.toString()));
 				root.appendChild(next);
 			}
 			doc.appendChild(root);

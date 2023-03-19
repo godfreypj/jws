@@ -19,15 +19,15 @@ public class CreateResource extends ServerResource {
 
 		// Extract the data from the POST body.
 		Form form = new Form(data);
-		String words = form.getValues("words");
+		String band = form.getValues("band");
 		int ranking = Integer.parseInt(form.getFirstValue("ranking"));
 
-		if (words == null || ranking < 1) {
-			msg = "No words or invalid ranking was given for the adage.\n";
+		if (band == null || ranking < 1) {
+			msg = "No band or invalid ranking was given.\n";
 			status = Status.CLIENT_ERROR_BAD_REQUEST;
 		} else {
-			Adages.add(words, ranking);
-			msg = "The adage '" + words + "' has been added with ranking " + ranking + ".\n";
+			Rankings.add(band, ranking);
+			msg = "The band '" + band + "' has been added with ranking " + ranking + ".\n";
 			status = Status.SUCCESS_OK;
 		}
 

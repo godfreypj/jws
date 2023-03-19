@@ -9,7 +9,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.restlet.data.Status;
 import org.restlet.data.MediaType;
-import java.util.List;
 
 public class XmlOneResource extends ServerResource {
 	public XmlOneResource() {
@@ -17,23 +16,22 @@ public class XmlOneResource extends ServerResource {
 
 	@Get
 	public Representation toXml() {
-		// Extract the adage's id.
-		String sid = (String) getRequest().getAttributes().get("id");
-		if (sid == null)
-			return badRequest("No ID provided\n");
+		// Extract the bands rank.
+		String rank = (String) getRequest().getAttributes().get("rank");
+		if (rank == null)
+			return badRequest("No Rank provided\n");
 
-		int id;
+		int localRank;
 		try {
-			id = Integer.parseInt(sid.trim());
+			localRank = Integer.parseInt(rank.trim());
 		} catch (Exception e) {
 			return badRequest("No such ID\n");
 		}
 
-		// Search for the Adage.
-		List<Adage> list = Adages.getList();
-		Adage adage = Adages.find(id);
-		if (adage == null)
-			return badRequest("No adage with ID " + id + "\n");
+		// Search for the Band.
+		Ranking localRanking = Rankings.find(localRank);
+		if (localRanking == null)
+			return badRequest("No band with ID " + localRanking + "\n");
 
 		// Generate the XML response.
 		DomRepresentation dom = null;
@@ -42,8 +40,8 @@ public class XmlOneResource extends ServerResource {
 			dom.setIndenting(true);
 			Document doc = dom.getDocument();
 
-			Element root = doc.createElement("adage");
-			root.appendChild(doc.createTextNode(adage.toString()));
+			Element root = doc.createElement("band");
+			root.appendChild(doc.createTextNode(localRanking.toString()));
 			doc.appendChild(root);
 		} catch (Exception e) {
 		}

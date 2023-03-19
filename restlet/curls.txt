@@ -1,7 +1,7 @@
-curl --request GET http://localhost:8080/adages2/
-curl --request GET http://localhost:8080/adages2/xml
-curl --request GET http://localhost:8080/adages2/json
-curl --request GET http://localhost:8080/adages2/xml/2
-curl --request POST --data "words=This is a test rank 3 woohoo&ranking=3" http://localhost:8080/adages2/create
-curl --request DELETE http://localhost:8080/adages2/delete/6
-curl --request PUT --data "words=This is an update woohoo&ranking=3" http://localhost:8080/adages2/update
+curl --request GET http://localhost:8080/rankings/
+curl --request GET http://localhost:8080/rankings/xml
+curl --request GET http://localhost:8080/rankings/json
+curl --request GET http://localhost:8080/rankings/xml/2
+curl --request POST --data "words=This is a test rank 3 woohoo&ranking=3" http://localhost:8080/rankings/create
+curl --request DELETE http://localhost:8080/rankings/delete/6
+curl --request PUT --data "words=This is an update woohoo&ranking=3" http://localhost:8080/rankings/update

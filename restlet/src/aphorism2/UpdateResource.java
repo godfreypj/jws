@@ -19,21 +19,21 @@ public class UpdateResource extends ServerResource {
 
 		// Extract the data from the POST body.
 		Form form = new Form(data);
-		String sid = form.getFirstValue("id");
-		String words = form.getFirstValue("words");
+		String ranking = form.getFirstValue("ranking");
+		String band = form.getFirstValue("band");
 
-		if (sid == null || words == null) {
-			msg = "An ID and new words must be provided.\n";
+		if (ranking == null || band == null) {
+			msg = "A Ranking and new band must be provided.\n";
 			status = Status.CLIENT_ERROR_BAD_REQUEST;
 		} else {
-			int id = Integer.parseInt(sid.trim());
-			Adage adage = Adages.find(id);
-			if (adage == null) {
-				msg = "There is no adage with ID " + id + "\n";
+			int localRank = Integer.parseInt(ranking.trim());
+			Ranking localBand = Rankings.find(localRank);
+			if (localBand == null) {
+				msg = "There is no band with Rank " + localRank + "\n";
 				status = Status.CLIENT_ERROR_BAD_REQUEST;
 			} else {
-				adage.setWords(words);
-				msg = "Adage " + id + " has been updated to '" + words + "'.\n";
+				localBand.setBandName(band);
+				msg = "Ranking " + localRank + " has been updated to '" + band + "'.\n";
 				status = Status.SUCCESS_OK;
 			}
 		}

@@ -7,7 +7,7 @@
       <init-param>
         <!-- Application class name -->
         <param-name>org.restlet.application</param-name>
-        <param-value>aphorism2.AdagesApplication</param-value>
+        <param-value>aphorism2.RankingsApplication</param-value>
       </init-param>
    </servlet>  
   

@@ -13,8 +13,8 @@ public class PlainResource extends ServerResource {
 
     @Get
     public Representation toPlain() {
-        String adages = Adages.toPlain();
+        String bands = Rankings.toPlain();
         setStatus(Status.SUCCESS_OK);
-        return new StringRepresentation(adages, MediaType.TEXT_PLAIN);
+        return new StringRepresentation(bands, MediaType.TEXT_PLAIN);
     }
 }

@@ -1,7 +1,5 @@
 package aphorism2;
 
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.Request;
@@ -10,7 +8,7 @@ import org.restlet.routing.Router;
 import org.restlet.data.Status;
 import org.restlet.data.MediaType;
 
-public class AdagesApplication extends Application {
+public class RankingsApplication extends Application {
 	@Override
 	public synchronized Restlet createInboundRoot() {
 		// To illlustrate the different API possibilities, implement the
@@ -23,31 +21,28 @@ public class AdagesApplication extends Application {
 			public void handle(Request request, Response response) {
 				String msg = null;
 
-				String sid = (String) request.getAttributes().get("id");
-				if (sid == null)
-					msg = badRequest("No ID given.\n");
+				String ranking = (String) request.getAttributes().get("ranking");
+				if (ranking == null)
+					msg = badRequest("No rank given.\n");
 
-				Integer id = null;
+				Integer rank = null;
 				try {
-					id = Integer.parseInt(sid.trim());
+					rank = Integer.parseInt(ranking.trim());
 				} catch (Exception e) {
 					msg = badRequest("Ill-formed ID.\n");
 				}
 
-				Adage adage = Adages.find(id);
-				if (adage == null)
-					msg = badRequest("No adage with ID " + id + "\n");
+				Ranking band = Rankings.find(rank);
+				if (band == null)
+					msg = badRequest("No band found with rank " + rank + "\n");
 				else {
-					Adages.getList().remove(adage);
-					msg = "Adage " + id + " removed.\n";
+					Rankings.getList().remove(band);
+					msg = "Band " + rank + " removed.\n";
 				}
-				// Update rankings
-				CopyOnWriteArrayList<Adage> currentAdages = Adages.getList();
 
-				for (int i = 0; i < currentAdages.size(); i++) {
-					Adage currentAdage = currentAdages.get(i);
-					currentAdage.setId(i + 1);
-				}
+				// Update rankings
+				Rankings.updateRankings();
+
 				// Generate HTTP response.
 				response.setEntity(msg, MediaType.TEXT_PLAIN);
 			}

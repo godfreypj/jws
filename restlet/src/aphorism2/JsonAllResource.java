@@ -13,7 +13,7 @@ public class JsonAllResource extends ServerResource {
 
 	@Get
 	public Representation toJson() {
-		List<Adage> list = Adages.getList();
+		List<Ranking> list = Rankings.getList();
 
 		// Generate the JSON representation.
 		JsonRepresentation json = null;
