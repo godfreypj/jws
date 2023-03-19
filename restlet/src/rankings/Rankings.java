@@ -1,4 +1,4 @@
-package aphorism2;
+package rankings;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -32,6 +32,7 @@ public class Rankings {
 
 	// Support GET one operation.
 	public static Ranking find(int ranking) {
+		System.out.println("HERE!!");
 		Ranking band = null;
 		for (Ranking b : bandNames) {
 			if (b.getRanking() == ranking) {

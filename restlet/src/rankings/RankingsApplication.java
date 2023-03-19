@@ -1,10 +1,11 @@
-package aphorism2;
+package rankings;
 
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.routing.Router;
+
 import org.restlet.data.Status;
 import org.restlet.data.MediaType;
 
@@ -21,18 +22,23 @@ public class RankingsApplication extends Application {
 			public void handle(Request request, Response response) {
 				String msg = null;
 
-				String ranking = (String) request.getAttributes().get("ranking");
-				if (ranking == null)
+				String localRanking = (String) request.getAttributes().get("rankings");
+				System.out.println("PHIL" + localRanking);
+
+				if (localRanking == null)
+					System.out.println("TOMATO");
 					msg = badRequest("No rank given.\n");
 
 				Integer rank = null;
 				try {
-					rank = Integer.parseInt(ranking.trim());
+					rank = Integer.parseInt(localRanking.trim());
 				} catch (Exception e) {
 					msg = badRequest("Ill-formed ID.\n");
 				}
 
 				Ranking band = Rankings.find(rank);
+
+
 				if (band == null)
 					msg = badRequest("No band found with rank " + rank + "\n");
 				else {
@@ -56,7 +62,7 @@ public class RankingsApplication extends Application {
 		router.attach("/json", JsonAllResource.class);
 		router.attach("/create", CreateResource.class);
 		router.attach("/update", UpdateResource.class);
-		router.attach("/delete/{id}", janitor); // instance of anonymous class
+		router.attach("/delete/{rankings}", janitor); // instance of anonymous class
 
 		return router;
 	}

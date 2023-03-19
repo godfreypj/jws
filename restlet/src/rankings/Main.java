@@ -1,4 +1,4 @@
-package aphorism2;
+package rankings;
 
 import org.restlet.Component;
 import org.restlet.data.Protocol;

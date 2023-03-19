@@ -1,4 +1,4 @@
-package aphorism2;
+package rankings;
 
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
@@ -6,6 +6,7 @@ import org.restlet.representation.Representation;
 import org.restlet.ext.xml.DomRepresentation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
 import org.restlet.data.MediaType;
 import java.util.List;
 

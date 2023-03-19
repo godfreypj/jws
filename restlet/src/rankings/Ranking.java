@@ -1,4 +1,4 @@
-package aphorism2;
+package rankings;
 
 public class Ranking {
     private String bandName;

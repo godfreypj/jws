@@ -1,4 +1,4 @@
-package aphorism2;
+package rankings;
 
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
@@ -7,6 +7,7 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.ext.xml.DomRepresentation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
 import org.restlet.data.Status;
 import org.restlet.data.MediaType;
 
@@ -25,13 +26,13 @@ public class XmlOneResource extends ServerResource {
 		try {
 			localRank = Integer.parseInt(rank.trim());
 		} catch (Exception e) {
-			return badRequest("No such ID\n");
+			return badRequest("No such band\n");
 		}
 
 		// Search for the Band.
 		Ranking localRanking = Rankings.find(localRank);
 		if (localRanking == null)
-			return badRequest("No band with ID " + localRanking + "\n");
+			return badRequest("No band with rank " + localRanking + "\n");
 
 		// Generate the XML response.
 		DomRepresentation dom = null;

@@ -1,7 +1,8 @@
-package aphorism2;
+package rankings;
 
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
+
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.ext.json.JsonRepresentation;
