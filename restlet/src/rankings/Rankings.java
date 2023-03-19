@@ -32,7 +32,6 @@ public class Rankings {
 
 	// Support GET one operation.
 	public static Ranking find(int ranking) {
-		System.out.println("HERE!!");
 		Ranking band = null;
 		for (Ranking b : bandNames) {
 			if (b.getRanking() == ranking) {
