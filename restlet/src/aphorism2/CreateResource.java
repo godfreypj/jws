@@ -9,30 +9,29 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Form;
 
 public class CreateResource extends ServerResource {
-    public CreateResource() { }
-
-    @Post
-    public Representation create(Representation data) {
-	Status status = null;
-	String msg = null;
-
-	// Extract the data from the POST body.
-	Form form = new Form(data);
-	String words = form.getFirstValue("words");
-
-	if (words == null) {
-	    msg = "No words were given for the adage.\n";
-	    status = Status.CLIENT_ERROR_BAD_REQUEST;
-	}
-	else {
-	    Adages.add(words);
-	    msg = "The adage '" + words + "' has been added.\n";
-	    status = Status.SUCCESS_OK;
+	public CreateResource() {
 	}
 
-	setStatus(status);
-	return new StringRepresentation(msg, MediaType.TEXT_PLAIN);
-    }
+	@Post
+	public Representation create(Representation data) {
+		Status status = null;
+		String msg = null;
+
+		// Extract the data from the POST body.
+		Form form = new Form(data);
+		String words = form.getValues("words");
+		int ranking = Integer.parseInt(form.getFirstValue("ranking"));
+
+		if (words == null || ranking < 1) {
+			msg = "No words or invalid ranking was given for the adage.\n";
+			status = Status.CLIENT_ERROR_BAD_REQUEST;
+		} else {
+			Adages.add(words, ranking);
+			msg = "The adage '" + words + "' has been added with ranking " + ranking + ".\n";
+			status = Status.SUCCESS_OK;
+		}
+
+		setStatus(status);
+		return new StringRepresentation(msg, MediaType.TEXT_PLAIN);
+	}
 }
-
-

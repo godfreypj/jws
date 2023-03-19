@@ -8,14 +8,13 @@ import org.restlet.data.Status;
 import org.restlet.data.MediaType;
 
 public class PlainResource extends ServerResource {
-    public PlainResource() { }
+    public PlainResource() {
+    }
 
     @Get
     public Representation toPlain() {
-	String adages = Adages.toPlain();
-	setStatus(Status.SUCCESS_OK);
-	return new StringRepresentation(adages, MediaType.TEXT_PLAIN);
+        String adages = Adages.toPlain();
+        setStatus(Status.SUCCESS_OK);
+        return new StringRepresentation(adages, MediaType.TEXT_PLAIN);
     }
 }
-
-
