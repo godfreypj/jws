@@ -69,18 +69,25 @@ public class PlacesRS {
 	@POST
 	@Produces({ MediaType.TEXT_PLAIN })
 	@Path("/create")
-	public Response create(@FormParam("place") String place) {
+	public Response create(@FormParam("id") int id,
+			@FormParam("place") String place,
+			@FormParam("points") String points) {
 		checkContext();
+	
+		// Check that sufficient data are present to create a new place.
 		String msg = null;
-		// Require both properties to create.
-		if (place == null) {
-			msg = "Property 'place' or 'points' is missing.\n";
+		if (place == null || points == null)
+			msg = "Missing place or points.\n";
+	
+		if (msg != null)
 			return Response.status(Response.Status.BAD_REQUEST).entity(msg).type(MediaType.TEXT_PLAIN).build();
-		} else {
-			int id = addPlace(place);
-			msg = "Place " + id + " created: (place = " + place + ").\n";
-			return Response.ok(msg, "text/plain").build();
-		}
+	
+		// Create the new place.
+		String record = place + "!" + points;
+		int newId = plist.add(record);
+	
+		msg = "Place " + newId + " has been created.\n";
+		return Response.ok(msg, "text/plain").build();
 	}
 
 	@PUT
@@ -93,9 +100,10 @@ public class PlacesRS {
 
 		// Check that sufficient data are present to do an edit.
 		String msg = null;
-		if (place == null && points == null)
+		if (place == null && points == null){
+			System.out.println("fuck");
 			msg = "Neither place nor points is given: nothing to edit.\n";
-
+		}
 		Places p = plist.find(id);
 		if (p == null)
 			msg = "There is no place with ID " + id + "\n";
@@ -106,13 +114,12 @@ public class PlacesRS {
 		if (place != null)
 			p.setPlace(place);
 		if (points != null)
-			if(points.contains("!")) {
+			if (points.contains("!")) {
 				String[] parts = points.split("!");
 				for (int i = 1; i < parts.length; i++) {
 					p.setPoint(parts[i], i);
 				}
-			}
-			else {
+			} else {
 				p.setPoint(points, 1);
 			}
 
