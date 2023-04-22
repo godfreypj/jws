@@ -51,7 +51,7 @@ curl -X GET http://localhost:8080/records/resourcesC/plain/<ID>
 
 ### POST
 
-To create a new **Doctor** and their **Patients**, use the following curl command (replace `<DOCTOR!ID>` with the doctors name and `<PATIENT1!INSNUM,PATIENT2!INSNUM...>` with the list of patients and their Insurance Numbers separated by an exclamation point). Each patient is separated by a comma:
+To create a new **Doctor** and their **Patients**, use the following curl command (replace `<DOCTOR!ID>` with the doctors name and ID separated by an exclamation point and `<PATIENT1!INSNUM,PATIENT2!INSNUM...>` with the list of patients and their Insurance Numbers separated by an exclamation point). Each patient is separated by a comma:
 ```console
 curl -X POST -d "doctor=<DOCTOR!ID>&patients=<PATIENT1!INSNUM,PATIENT2!INSNUM...>" http://localhost:8080/records/resourcesC/create
 ```
