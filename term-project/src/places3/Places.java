@@ -1,4 +1,4 @@
-package places3;
+package src.places3;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlElement;
@@ -27,7 +27,7 @@ public class Places implements Comparable<Places> {
         return this.place;
     }
 
-    public void setPoint(String point, int num){
+    public void setPoint(String point, int num) {
         this.points += " " + num + ". " + point;
     }
 

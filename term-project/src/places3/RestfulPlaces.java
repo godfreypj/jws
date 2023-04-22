@@ -1,4 +1,4 @@
-package places3;
+package src.places3;
 
 import java.util.Set;
 import java.util.HashSet;

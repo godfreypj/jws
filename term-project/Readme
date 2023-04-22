@@ -1,4 +1,75 @@
-1. Compile/deploy in the usual way with the Ant script: ant -Dwar.name=places3 deploy
-2. The base URL is: http://localhost:8080/places3/resourcesP/.
-3. Various curl scripts or the equivalent can be used to confirm that the CRUD operations are supported.
+# Term Project ReadMe
+## Hospital Records
 
+This is an example of a Restlet service `records` running on localhost with the base URL `http://localhost:8080/records/resourcesP/`.
+
+## Deploying/Usage
+1. Compile/deploy with the Ant script: ant -Dwar.name=records deploy
+2. The base URL is: http://localhost:8080/records/resourcesP/.
+
+## Database Design
+The database is broken up into 2 files: doctors.db and patients.db; they are related by the ID of the Doctor.
+
+`doctors.db` is a database file consisting of strings of doctors and their 4 digit ids separated by an exclamation point:
+```php
+Dr.Smith!3254
+Dr.Bob!5940
+Dr.Lane!4532
+```
+`patients.db` is a database file consisting of strings of patients, their insurance numbers (3 digits preceded by an I), and their doctors ID separated by exclamation points:
+```php
+Sally!I123!3254
+Stan!I456!3254
+Brian!I565!3254
+Sally!I987!5940
+Steve!I090!4532
+Rachel!I433!4532
+```
+
+### GET
+
+To retrieve all records: **Doctors** and their **Patients**, in XML, use the following curl command:
+```console
+curl -X GET http://localhost:8080/records/resourcesC/xml
+```
+
+To retrieve all records: **Doctors** and their **Patients**, in plain text, use the following curl command:
+```console
+curl -X GET http://localhost:8080/records/resourcesC/plain
+```
+
+### GET by ID
+
+To retrieve a specific **Doctor** and their **Patients** by their ID in XML, use the following curl command (replace `<ID>` with the actual ID of the **Doctor**):
+```console
+curl -X GET http://localhost:8080/records/resourcesC/xml/<ID>
+```
+To retrieve a specific **Doctor** and their **Patiends** by their ID in plain text, use the following curl command (replace `<ID>` with the actual ID of the **Doctor**):
+```console
+curl -X GET http://localhost:8080/records/resourcesC/plain/<ID>
+```
+
+### POST
+
+To create a new **Doctor** and their **Patients**, use the following curl command (replace `<DOCTOR!ID>` with the doctors name and `<PATIENT1!INSNUM,PATIENT2!INSNUM...>` with the list of patients and their Insurance Numbers separated by an exclamation point). Each patient is separated by a comma:
+```console
+curl -X POST -d "doctor=<DOCTOR!ID>&patients=<PATIENT1!INSNUM,PATIENT2!INSNUM...>" http://localhost:8080/records/resourcesC/create
+```
+
+### UPDATE
+
+To update a specific **Doctor** by their ID, use the following curl command (replace `<ID>` with the actual ID of the **Doctor** and `<NAME>` with the new name of the Doctor):
+```console
+curl -X PUT -d "doctor=<ID>&name=<NAME>" http://localhost:8080/records/resourcesC/update/<ID>
+```
+
+### DELETE
+
+To delete a specific **Doctor** and all their **Patients** by their ID, use the following curl command (replace `<ID>` with the actual ID of the **Doctor**):
+```console
+curl -X DELETE http://localhost:8080/records/resourcesC/delete/<ID>
+```
+
+### Web App Description Language File:
+
+http://localhost:8080/records/resourcesC/application.wadl
