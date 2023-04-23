@@ -59,14 +59,12 @@ public class Record {
     public Record add(String record) {
         // The record comes in looking like this:
         // Dr.Name!1234!PatientName!I123!1234!PatientName!I321!1234...PatientName!...
-        System.out.println("ADDING RECORD!! -> " + record);
         String[] parts = record.split("!");
         int id = Integer.parseInt(parts[1]);
         // Create a new Doctor
         Doctor d = new Doctor();
         d.setId(id);
         d.setName(parts[0]);
-        System.out.println("DOCTOR !! -> " + d);
         // Loop through the array of patients, every 2 elements is 1 patient
         for (int i = 2; i < parts.length; i += 3) {
             // Create a new patient
@@ -74,14 +72,12 @@ public class Record {
             p.setName(parts[i]);
             p.setInsnum(parts[i + 1]);
             p.setId(Integer.parseInt(parts[i + 2]));
-            System.out.println("Adding PATIENT to patents !! -> " + p);
             patients.add(p);
         }
         // Create a new record
         Record r = new Record();
         r.setDoctor(d);
         r.setPatients(patients);
-        System.out.println("Created new record !! -> " + r);
         return r;
     }
 }
