@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -33,23 +32,17 @@ public class RecordsRS {
     @Produces({ MediaType.APPLICATION_XML })
     public Response getXml() {
         checkContext();
+        // Return all in XML
         return Response.ok(rlist, "application/xml").build();
     }
 
     @GET
     @Path("/xml/{id: \\d+}")
-    @Produces({ MediaType.APPLICATION_XML }) // could use "application/xml" instead
+    @Produces({ MediaType.APPLICATION_XML })
     public Response getXml(@PathParam("id") int id) {
         checkContext();
+        // Return record by ID in XML
         return toRequestedType(id, "application/xml");
-    }
-
-    @GET
-    @Produces({ MediaType.TEXT_PLAIN })
-    @Path("/plain/{id: \\d+}")
-    public Response getPlain(@PathParam("id") int id) {
-        checkContext();
-        return toRequestedType(id, "application/plain");
     }
 
     @GET
@@ -57,7 +50,17 @@ public class RecordsRS {
     @Produces({ MediaType.TEXT_PLAIN })
     public String getPlain() {
         checkContext();
+        // Return all records in plain text
         return rlist.toString();
+    }
+
+    @GET
+    @Produces({ MediaType.TEXT_PLAIN })
+    @Path("/plain/{id: \\d+}")
+    public Response getPlain(@PathParam("id") int id) {
+        checkContext();
+        // Return record by ID in plain text
+        return toRequestedType(id, "text/plain");
     }
 
     @POST
@@ -68,7 +71,7 @@ public class RecordsRS {
             @FormParam("patients") String patients) { // PatientName!INSUM,PatientName!INSUM,...
         checkContext();
 
-        // Check that sufficient data are present to create a new record.
+        // Check that sufficient data is present to create a new record.
         String msg = null;
         if (doctor == null || patients == null)
             msg = "Missing doctor or patients.\n";
@@ -81,16 +84,19 @@ public class RecordsRS {
         String[] doctorRecord = doctor.split("!");
         d.setName(doctorRecord[0]);
         d.setId(Integer.parseInt(doctorRecord[1]));
+
         // Create the doctors patients list
         ArrayList<Patient> patientsList = new ArrayList<Patient>();
+
         // Create each patient
         String[] eachPatient = patients.split(",");
+        // Iterate through all given patients, creating a Patient for each one
         for (String patient : eachPatient) {
             Patient p = new Patient();
             String[] patientRecord = patient.split("!");
             p.setName(patientRecord[0]);
             p.setInsnum(patientRecord[1]);
-            p.setId(Integer.parseInt(patientRecord[2]));
+            p.setId(Integer.parseInt(doctorRecord[1]));
             // Add the patient to the doctors list
             patientsList.add(p);
         }
@@ -101,7 +107,7 @@ public class RecordsRS {
         // Add the record to Records
         rlist.setRecords(r);
 
-        // TODO: handle failure
+        // Return success!
         msg = "Record " + r.toString() + " has been created.\n";
         return Response.ok(msg, "text/plain").build();
     }
@@ -118,24 +124,38 @@ public class RecordsRS {
         if (name == null) {
             msg = "No name is given: nothing to edit.\n";
         }
+        // Check if we got a good id
+        String idStr = Integer.toString(id);
+        if (idStr.length() != 4) {
+            msg = "Id must have exactly 4 digits.\n";
+        }
+
         // Create a doctor
         Doctor d = new Doctor();
         d.setId(id);
         d.setName(name);
+
         // See if this Doctor exists already
+        boolean doctorFound = false;
         List<Record> records = rlist.getRecords();
+        // Iterate over the existing records
         for (Record r : records) {
             Doctor doc = r.getDoctor();
             // If our doctor is found, update the name
             if (doc.compareTo(d) == 0) {
                 doc.setName(name);
-            } else {
-                msg = "There is no doctor with ID " + id + "\n";
+                doctorFound = true;
+                break;
             }
+        }
+        // Otherwise, return failure
+        if (!doctorFound) {
+            msg = "There is no doctor with ID " + id + "\n";
         }
         if (msg != null)
             return Response.status(Response.Status.BAD_REQUEST).entity(msg).type(MediaType.TEXT_PLAIN).build();
 
+        // Return success!
         msg = "Doctor with " + id + " has been updated with " + name + ".\n";
         return Response.ok(msg, "text/plain").build();
     }
@@ -145,25 +165,37 @@ public class RecordsRS {
     @Path("/delete/{id: \\d+}")
     public Response delete(@PathParam("id") int id) {
         checkContext();
+
+        // Check that sufficient data is present to do a delete
         String msg = null;
+        // Check if we got a good id
         String idStr = Integer.toString(id);
         if (idStr.length() != 4) {
             msg = "Id must have exactly 4 digits.\n";
         }
-        // Create a doctor and see if this Doctor exists already
+
+        // Create a doctor, who cares about the name!
+        Doctor d = new Doctor();
+        d.setId(id);
+        // See if this Doctor exists already
+        boolean doctorFound = false;
         List<Record> records = rlist.getRecords();
         for (Record r : records) {
             Doctor doc = r.getDoctor();
-            // If we find the Doctors record, remove it
-            if (id == doc.getId()) {
-                Record foundRecord = rlist.getRecord(id);
-                rlist.removeRecord(foundRecord);
-                // Otherwise, return failure
-            } else {
-                msg += "No Doctor with " + id + " found.";
-                return Response.status(Response.Status.BAD_REQUEST).entity(msg).type(MediaType.TEXT_PLAIN).build();
+            // If our doctor is found, update the name
+            if (doc.compareTo(d) == 0) {
+                rlist.removeRecord(r);
+                doctorFound = true;
+                break;
             }
         }
+        // Otherwise, return failure
+        if (!doctorFound) {
+            msg = "There is no doctor with ID " + id + "\n";
+        }
+        if (msg != null)
+            return Response.status(Response.Status.BAD_REQUEST).entity(msg).type(MediaType.TEXT_PLAIN).build();
+
         msg = "Doctor and patients with " + id + " deleted.\n";
         return Response.ok(msg, "text/plain").build();
     }
@@ -177,38 +209,26 @@ public class RecordsRS {
     private void populate() {
         rlist = new Records();
 
-        // doctorname!ID!PatientName!INSUM,PatientName!INSUM,...
+        // The db is guranteed to have 3 patients per Doctor
         String patientsFile = "/WEB-INF/data/patients.db";
         InputStream inPatients = sctx.getResourceAsStream(patientsFile);
         String doctorsFile = "/WEB-INF/data/doctors.db";
         InputStream inDoctor = sctx.getResourceAsStream(doctorsFile);
 
-        // Every one line of doctors.db is a Doctor and their ID separated by "!":
-        // Dr.Name!1234
-        // For every line of doctors.db, split by "!"
-        // where the first part is a name and the second part is an ID
-        // Create a new Doctor, set parts
-        // Read in 3 lines of patients DB (every doctor has 3 patients to start)
-        // Every line is a Patient, their Insurance Num, and their Doctor's ID:
-        // PatientName!I123!1234
-        // For every line of patients.db, split by "!"
-        // where the first part is a name, 2nd is an insnum, and 3rd is an ID
-        // Create a new Patient, set parts
-        // Create a new List of Patients, add Patient to Patients
-        // Do for every 3 lines of patients.db
-        // Once Doctor and Patients List are created, create a new Record, set parts
-        // Once Record is created, add to Records list
+        // Check if the dbs were read in correctly
         if (inDoctor != null || inPatients != null) {
             try {
                 BufferedReader readerDoctor = new BufferedReader(new InputStreamReader(inDoctor));
                 BufferedReader readerPatients = new BufferedReader(new InputStreamReader(inPatients));
                 String recordDoctor = null;
+                // For every line, create a new Doctor and patient list
                 while ((recordDoctor = readerDoctor.readLine()) != null) {
                     Doctor d = new Doctor();
                     ArrayList<Patient> patients = new ArrayList<Patient>();
                     String[] doctorParts = recordDoctor.split("!");
                     d.setName(doctorParts[0]);
                     d.setId(Integer.parseInt(doctorParts[1]));
+                    // For every 3 patients, create new Patients and add them to the list
                     for (int i = 0; i < 3; i++) {
                         Patient p = new Patient();
                         String recordPatient = readerPatients.readLine();
@@ -220,11 +240,14 @@ public class RecordsRS {
                             patients.add(p);
                         }
                     }
+                    // Now we have the objects we need to create a record
                     Record r = new Record();
                     r.setDoctor(d);
                     r.setPatients(patients);
+                    // Add the record to Records
                     rlist.setRecords(r);
                 }
+                // Return failure
             } catch (Exception e) {
                 throw new RuntimeException("I/O failed!");
             }
@@ -233,11 +256,20 @@ public class RecordsRS {
 
     // Generate an HTTP error response or typed OK response.
     private Response toRequestedType(int id, String type) {
-        String result = rlist.toString();
+        // If we want plain text, we use toString
+        Object result;
+        if (type.equals("text/plain")) {
+            Record r = rlist.getRecord(id);
+            result = r.toString();
+            // Otherwise, just return the record
+        } else {
+            result = rlist.getRecord(id);
+        }
+        // If we found nothing, return failure
         if (result == null) {
             String msg = id + " is a bad ID.\n";
             return Response.status(Response.Status.BAD_REQUEST).entity(msg).type(MediaType.TEXT_PLAIN).build();
-        } else
+        } else // Otherwise, return success!
             return Response.ok(result, type).build(); // toXml is automatic
     }
 }

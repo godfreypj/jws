@@ -60,7 +60,7 @@ curl -X POST -d "doctor=<DOCTOR!ID>&patients=<PATIENT1!INSNUM,PATIENT2!INSNUM...
 
 To update a specific **Doctor** by their ID, use the following curl command (replace `<ID>` with the actual ID of the **Doctor** and `<NAME>` with the new name of the Doctor):
 ```console
-curl -X PUT -d "doctor=<ID>&name=<NAME>" http://localhost:8080/records/resourcesC/update/<ID>
+curl -X PUT -d "doctor=<ID>&name=<NAME>" http://localhost:8080/records/resourcesC/update/
 ```
 
 ### DELETE
