@@ -21,9 +21,10 @@ import javax.servlet.ServletContext;
 @Path("/")
 public class RecordsRS {
     @Context
-    private ServletContext sctx; // dependency injection
-    private static Records rlist; // set in populate()
+    private ServletContext sctx; // For reading in the db
+    private static Records rlist; // Initial read in/creation in populate()
 
+    // Constructor
     public RecordsRS() {
     }
 
@@ -88,7 +89,7 @@ public class RecordsRS {
         // Create the doctors patients list
         ArrayList<Patient> patientsList = new ArrayList<Patient>();
 
-        // Create each patient
+        // Create eachPatient list
         String[] eachPatient = patients.split(",");
         // Iterate through all given patients, creating a Patient for each one
         for (String patient : eachPatient) {
@@ -182,7 +183,7 @@ public class RecordsRS {
         List<Record> records = rlist.getRecords();
         for (Record r : records) {
             Doctor doc = r.getDoctor();
-            // If our doctor is found, update the name
+            // If our doctor is found, delete the record
             if (doc.compareTo(d) == 0) {
                 rlist.removeRecord(r);
                 doctorFound = true;
@@ -228,7 +229,7 @@ public class RecordsRS {
                     String[] doctorParts = recordDoctor.split("!");
                     d.setName(doctorParts[0]);
                     d.setId(Integer.parseInt(doctorParts[1]));
-                    // For every 3 patients, create new Patients and add them to the list
+                    // For every 3 lines, create new Patients and add them to the list
                     for (int i = 0; i < 3; i++) {
                         Patient p = new Patient();
                         String recordPatient = readerPatients.readLine();
