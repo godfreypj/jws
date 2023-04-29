@@ -35,6 +35,19 @@ public class Records {
         this.records.add(record);
     }
 
+    public Doctor findDoctor(int id) {
+        // Create a Docto obj for return
+        Doctor doc = new Doctor();
+        // Loop through the record
+        for (Record r : records) {
+            Doctor d = r.getDoctor();
+            if (d.getId() == id) {
+                doc = d;
+            }
+        }
+        return doc;
+    }
+
     public String toString() {
         String res = "";
         for (Record r : records) {

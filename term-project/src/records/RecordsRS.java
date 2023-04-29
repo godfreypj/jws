@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -138,16 +137,11 @@ public class RecordsRS {
 
         // See if this Doctor exists already
         boolean doctorFound = false;
-        List<Record> records = rlist.getRecords();
-        // Iterate over the existing records
-        for (Record r : records) {
-            Doctor doc = r.getDoctor();
-            // If our doctor is found, update the name
-            if (doc.compareTo(d) == 0) {
-                doc.setName(name);
-                doctorFound = true;
-                break;
-            }
+        Doctor doc = rlist.findDoctor(id);
+        // If our doctor is found, update the name
+        if (doc.compareTo(d) == 0) {
+            doc.setName(name);
+            doctorFound = true;
         }
         // Otherwise, return failure
         if (!doctorFound) {
@@ -180,15 +174,12 @@ public class RecordsRS {
         d.setId(id);
         // See if this Doctor exists already
         boolean doctorFound = false;
-        List<Record> records = rlist.getRecords();
-        for (Record r : records) {
-            Doctor doc = r.getDoctor();
-            // If our doctor is found, delete the record
-            if (doc.compareTo(d) == 0) {
-                rlist.removeRecord(r);
-                doctorFound = true;
-                break;
-            }
+        Doctor doc = rlist.findDoctor(id);
+        // If our doctor is found, delete the record
+        if (doc.compareTo(d) == 0) {
+            Record r = rlist.getRecord(id);
+            rlist.removeRecord(r);
+            doctorFound = true;
         }
         // Otherwise, return failure
         if (!doctorFound) {
