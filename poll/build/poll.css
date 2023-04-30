@@ -1,0 +1,52 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#place-form {
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+#place-form label {
+    display: block;
+    margin-bottom: 10px;
+    box-shadow: inset;
+}
+
+#place-form input[type="text"],
+#place-form textarea {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+#place-form textarea {
+    height: 150px;
+}
+
+#place-form input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#place-form input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+#container {
+    margin: 20px auto;
+}
+
+#container li {
+    margin-bottom: 10px;
+    border-bottom: 5px solid #4CAF50;
+}
